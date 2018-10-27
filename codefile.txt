@@ -1,0 +1,40 @@
+Sub StockData()
+' Loop through worksheets in workbook
+Dim ws As Worksheet
+For Each ws In Worksheets
+' set headers for new columns
+ws.Range("I1").Value = "<ticker>"
+ws.Range("J1").Value = "<total volume>"
+' declare variables
+Dim ticker As String
+Dim totalvolume As Double
+Dim tablerow As Double
+Dim lastrow As Double
+' set variable values
+tablerow = 2
+totalvolume = 0
+' set lastrow variable to last row of data in column A1
+lastrow = Cells(Rows.Count, 1).End(xlUp).Row
+    ' loop through all tickers in sheet
+For i = 2 To lastrow
+    ' if ticker changed, then
+    If ws.Cells(i, 1).Value <> ws.Cells(i + 1, 1).Value Then
+    'set ticker name
+    ticker = ws.Cells(i, 1)
+    ' add row volume to the totalvolume
+    totalvolume = totalvolume + ws.Cells(i, 7).Value
+    ' add ticker name and volume to summary table
+    ws.Range("I" & tablerow).Value = ticker
+    ws.Range("J" & tablerow).Value = totalvolume
+    ' set up summary table for next change in ticker name
+    tablerow = tablerow + 1
+    ' clear total volume for next time
+    totalvolume = 0
+Else
+    totalvolume = totalvolume + ws.Cells(i, 7).Value
+    'add volume to summary table
+    ws.Range("J" & tablerow).Value = totalvolume
+End If
+Next i
+Next ws
+End Sub
